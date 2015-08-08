@@ -52,7 +52,7 @@ window.TAAS = new Core();
         vex.dialog.alert({
             message: 'You are about to create a new tour for this page. To get started, click an element on your page.'
         });
-        $('.vex *').addClass('unshepable');
+        $('.vex, .vex-dialog-button').addClass('unshepable');
 
     });
 
