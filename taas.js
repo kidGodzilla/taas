@@ -27,13 +27,15 @@ window.TAAS = new Core();
 
 
     TAAS.registerGlobal('init', function () {
-        $(document).ready(function () {
-            TAAS.set('mode', 'clicking');
-            TAAS.highlighter();
-            TAAS.bindClickEvents();
-            TAAS.set('steps', []);
-            TAAS.appendUI();
-        });
+        if (window.location.hash === "#taas-editor") {
+            $(document).ready(function () {
+                TAAS.set('mode', 'clicking');
+                TAAS.highlighter();
+                TAAS.bindClickEvents();
+                TAAS.set('steps', []);
+                TAAS.appendUI();
+            });
+        }
     });
 
 
