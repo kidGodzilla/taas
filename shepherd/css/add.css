@@ -16,3 +16,6 @@
 .shepherd-element {
     z-index: 999999999999999999;
 }
+.vex {
+    z-index: 9999999999;
+}
