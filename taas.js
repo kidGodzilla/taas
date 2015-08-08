@@ -48,6 +48,7 @@ window.TAAS = new Core();
         TAAS.bindClickEvents();
     });
 
+
     /**
      * Highlights DOM elements beneath the cursor
      */
@@ -63,6 +64,7 @@ window.TAAS = new Core();
             if (target && target.className === "outer") {
                 box.hide();
                 target = document.elementFromPoint(mouseX, mouseY);
+                TAAS.set('target', target);
             }
             box.show();
 
@@ -103,7 +105,7 @@ window.TAAS = new Core();
                     debouncing = 0;
                 }, 500);
 
-                target = document.elementFromPoint(mouseX, mouseY);
+                target = TAAS.get('target');
 
                 console.log(target);
                 var clickedPath = getFullPath(target);
