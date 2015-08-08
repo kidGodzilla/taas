@@ -132,6 +132,7 @@
          * App
          */
         loadStylesheet('http://kidgodzilla.github.io/taas/shepherd/css/shepherd-theme-arrows.css');
+        loadStylesheet('http://kidgodzilla.github.io/taas/shepherd/css/add.css');
         loadScript(protocol + 'cdnjs.cloudflare.com/ajax/libs/tether/0.7.2/tether.min.js');
         loadScript('http://kidgodzilla.github.io/taas/shepherd/js/shepherd.min.js');
         loadScript('http://kidgodzilla.github.io/taas/core.js');
