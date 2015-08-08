@@ -192,6 +192,8 @@ window.TAAS = new Core();
         var head = "";
         var steps = TAAS.get('steps');
 
+        if (!steps.length) return false;
+
         // Loop through each step in step
         for (var i = 0; i < steps.length; i++) {
             var step = steps[i];
