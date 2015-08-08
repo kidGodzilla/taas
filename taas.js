@@ -40,7 +40,7 @@ window.TAAS = new Core();
 
 
     TAAS.registerGlobal('appendUI', function () {
-        $('body').append("<button class='btn btn-primary' value='Generate Code' style='position:fixed;bottom:32px;right:32px;z-index:99999999999999999;' onclick='TAAS.logGeneratedCode()'></button>");
+        $('body').append("<button class='generator btn btn-primary' value='Generate Code' style='position:fixed;bottom:32px;right:32px;z-index:99999999999999999;' onclick='TAAS.logGeneratedCode()'></button>");
     });
 
     TAAS.registerGlobal('logGeneratedCode', function () {
@@ -95,7 +95,7 @@ window.TAAS = new Core();
         var debounce;
 
 
-        $('*').on("click", function (event) {
+        $('*').not('.generator').on("click", function (event) {
             event.stopPropagation();
             event.preventDefault();
 
