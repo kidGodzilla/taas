@@ -72,7 +72,7 @@
          * Firebase (v2.2.1)
          * A document database in the cloud
          */
-        loadScript(protocol + "cdn.firebase.com/js/client/2.2.1/firebase.js");
+        // loadScript(protocol + "cdn.firebase.com/js/client/2.2.1/firebase.js");
 
 
         /**
@@ -105,7 +105,7 @@
          * Font-Awesome
          * A very useful icon pack
          */
-        loadStylesheet(protocol + "cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css");
+        // loadStylesheet(protocol + "cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css");
 
 
 
@@ -122,8 +122,8 @@
          *
          * See: https://bootswatch.com/sandstone/
          */
-        loadStylesheet(protocol + "cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.4/sandstone/bootstrap.min.css");
-        loadScript(protocol + "cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js");
+        // loadStylesheet(protocol + "cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.4/sandstone/bootstrap.min.css");
+        // loadScript(protocol + "cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js");
 
 
 
@@ -310,242 +310,6 @@ if (typeof window !== 'undefined')                      { window['Core'] = Core;
  */
 
 
-var MyApp = new Core();
+var TAAS = new Core();
 
-
-/**
- * Registration / Auth for Demo App
- */
-
-(function () {
-
-    // Firebase-safe-key version of the host
-    var host = window.location.host.replace('www.', '').replace(/\./g, '');
-    MyApp.set('host', host);
-
-    // Firebase-safe-key version of the pathname
-    var pathname = window.location.pathname.replace(/\//g, '').replace(/\./g, '');
-    MyApp.set('pathname', pathname);
-    MyApp.set('pathName', pathname);
-
-    function redirectWithPOST (timestamp) {
-        var host = MyApp.get('host');
-        var pathname = MyApp.get('pathname');
-        var user = MyApp.get('userID');
-
-        var form = $('<form action="" method="post">' +
-            '<input type="hidden" name="host" value="' + host + '" />' +
-            '<input type="hidden" name="pathname" value="' + pathname + '" />' +
-            '<input type="hidden" name="user" value="' + user + '" />' +
-            '<input type="hidden" name="timestamp" value="' + timestamp + '" />' +
-            '</form>');
-        $('body').append(form);
-        form.submit();
-    }
-
-    function getSitesObj (userID) {
-        userID = userID || MyApp.get('userID');
-        var specificRef = new Firebase("https://wpages.firebaseio.com/users/" + userID);
-
-        specificRef.on("value", function (snapshot) {
-            var host = MyApp.get('host');
-            var pathname = MyApp.get('pathname');
-            var sitesObj = snapshot.val();
-            MyApp.set('sitesObj', sitesObj);
-            if (sitesObj && sitesObj.sites && sitesObj.sites[host] && sitesObj.sites[host][pathname] && sitesObj.sites[host][pathname].token) {
-                var pageToken = sitesObj.sites[host][pathname].token;
-                MyApp.set('pageToken', pageToken);
-            }
-        }, function (errorObject) {
-            console.log("The read failed: " + errorObject.code);
-        });
-    }
-
-    MyApp.registerGlobal('getSitesObj', getSitesObj);
-
-    MyApp.registerGlobal('checkForUpdate', function () {
-        var ref = new Firebase("https://wpages.firebaseio.com/users/" + MyApp.get('userID') + "/pages/" + MyApp.get('host') + "/" + MyApp.get('pathname'));
-        ref.limitToLast(1).on("child_added", function(snapshot) {
-            var ts = snapshot.key();
-            var lastUpdated = $$('body').attr('data-last-updated') || 0;
-            var hasCheckedForUpdate = MyApp.get('hasCheckedForUpdate');
-            if (ts && ts > lastUpdated && typeof(MyAppIsDraft) !== "boolean" && !hasCheckedForUpdate) {
-                console.log('unpublished version available from: ', ts);
-
-                var search = window.location.search;
-                if (search.indexOf('&draft') === -1)
-                    search += "&draft";
-                history.replaceState('redirect', 'redirect', window.location.pathname + search);
-
-                redirectWithPOST(ts);
-            } else if (typeof(MyAppIsDraft) === "boolean" && MyAppIsDraft) {
-                MyApp.showPublishButton();
-            }
-
-        });
-        MyApp.set('hasCheckedForUpdate', true);
-        return true;
-    });
-
-    MyApp.registerGlobal('auth', function (callback, force) {
-
-        // IF we have a callback
-        if (callback && typeof(callback) === "function") {
-            // Do not require authentication for SVGPEN (demo site)
-            if (window.location.host === "svgpen.com" || window.location.host === "www.svgpen.com") return callback();
-
-            // Do not require authentication for demos (unless forced)
-            if (MyApp.get('isTemplate') && !force) return callback();
-        }
-
-        var authData = firebaseRef.getAuth();
-
-        if (authData) {
-            // console.log("Authenticated user with uid:", authData.uid);
-            var userID = authData.uid;
-            MyApp.set('userID', authData.uid);
-            MyApp.set('userEmail', authData.password.email);
-            getSitesObj(userID);
-            if (callback && typeof(callback) === "function")
-                callback();
-        } else {
-            // Modal
-            vex.dialog.open({
-                message: 'Enter your username and password:',
-                input: "<input name=\"email\" type=\"text\" placeholder=\"Email\" required />\n<input name=\"password\" type=\"password\" placeholder=\"Password\" required /><br>Don't have an account? <a href='#' onclick='$(\".vex-dialog-button-secondary\").click();MyApp.createAccount()'>Create an account now</a>",
-                buttons: [
-                    $.extend({}, vex.dialog.buttons.YES, {
-                        text: 'Login'
-                    }), $.extend({}, vex.dialog.buttons.NO, {
-                        text: 'Back'
-                    })
-                ],
-                callback: function (data) {
-                    if (data === false) {
-                        // MyApp.lockBuilder();
-                        return false; // Cancelled
-                    }
-                    firebaseRef.authWithPassword({ "email": data.email, "password": data.password
-                    }, function (error, authData) {
-                        if (error) {
-                            // Todo: Try login again
-                            Messenger().post({
-                                message: "Login Failed! " + error + ' <a href="#" onclick="MyApp.resetPassword()">Reset Password</a>?',
-                                type: 'error',
-                                showCloseButton: true
-                            });
-                        } else {
-                            var userID = authData.uid;
-                            MyApp.set('userID', authData.uid);
-                            MyApp.set('userEmail', authData.password.email);
-                            getSitesObj(userID);
-                            if (callback && typeof(callback) === "function") callback();
-                        }
-                    });
-                }
-            });
-        }
-    });
-
-    MyApp.registerGlobal('createAccount', function () {
-        vex.dialog.open({
-            message: 'Please enter your email address and choose a password:',
-            input: "<input name=\"email\" type=\"text\" placeholder=\"Email\" required />\n<input name=\"password\" type=\"password\" placeholder=\"Password\" required />",
-            buttons: [
-                $.extend({}, vex.dialog.buttons.YES, {
-                    text: 'Create Account'
-                }), $.extend({}, vex.dialog.buttons.NO, {
-                    text: 'Back'
-                })
-            ],
-            callback: function (data) {
-                if (data === false) {
-                    return false; // Cancelled
-                }
-                console.log(data.email, data.password);
-
-                firebaseRef.createUser({
-                    email: data.email,
-                    password: data.password
-                }, function(error, userData) {
-                    if (error) {
-                        switch (error.code) {
-                            case "EMAIL_TAKEN":
-                                console.log("The new user account cannot be created because the email is already in use.");
-                                Messenger().post({
-                                    message: "The new user account cannot be created because the email is already in use.",
-                                    type: 'error',
-                                    showCloseButton: true
-                                });
-                                break;
-                            case "INVALID_EMAIL":
-                                console.log("The specified email is not a valid email.");
-                                Messenger().post({
-                                    message: "The specified email is not a valid email.",
-                                    type: 'error',
-                                    showCloseButton: true
-                                });
-                                break;
-                            default:
-                                console.log("Error creating user:", error);
-                                Messenger().post("Error creating user:", error);
-                        }
-                    } else {
-                        console.log("Successfully created user account with uid:", userData.uid);
-                        Messenger().post("Your account was created successfully.");
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 2500);
-                    }
-                });
-
-            }
-        });
-    })
-
-
-    MyApp.registerGlobal('resetPassword', function () {
-
-        vex.dialog.open({
-            message: 'To reset your password, please enter your email address:',
-            input: "<input name=\"email\" type=\"text\" placeholder=\"Email\" required />",
-            buttons: [
-                $.extend({}, vex.dialog.buttons.YES, {
-                    text: 'Reset Password'
-                }), $.extend({}, vex.dialog.buttons.NO, {
-                    text: 'Back'
-                })
-            ],
-            callback: function (data) {
-                if (data === false) {
-                    return true; // Cancelled
-                }
-
-                firebaseRef.resetPassword({
-                    email: data.email
-                }, function (error) {
-                    if (error) {
-                        switch (error.code) {
-                            case "INVALID_USER":
-                                Messenger().post({
-                                    message: "The specified user account does not exist.",
-                                    type: 'error',
-                                    showCloseButton: true
-                                });
-                                break;
-                            default:
-                                Messenger().post({
-                                    message: "Error resetting password: " + error,
-                                    type: 'error',
-                                    showCloseButton: true
-                                });
-                        }
-                    } else {
-                        Messenger().post("Your password has been reset. You should receive an email at the address provided.");
-                    }
-                });
-            }
-        });
-    });
-})();
 
