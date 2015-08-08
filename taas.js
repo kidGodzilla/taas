@@ -160,7 +160,7 @@ window.TAAS = new Core();
                 // TODO: Save the el
                 var title = $('.shepherd-title').html();
                 var text = $('.shepherd-text').html();
-                console.log(title, text, sel);
+                
                 var step = {
                     title: title,
                     text: text,
