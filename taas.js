@@ -7,6 +7,25 @@ window.TAAS = new Core();
 
 
 (function () {
+
+    function fullPath (el) {
+        var names = [];
+        while (el.parentNode){
+            if (el.id){
+                names.unshift('#'+el.id);
+                break;
+            } else {
+                if (el==el.ownerDocument.documentElement) names.unshift(el.tagName);
+                else {
+                    for (var c=1,e=el;e.previousElementSibling;e=e.previousElementSibling,c++);
+                    names.unshift(el.tagName+":nth-child("+c+")");
+                }
+                el = el.parentNode;
+            }
+        }
+        return names.join(" > ");
+    }
+
     TAAS.registerGlobal('init', function () {
         TAAS.highlighter();
         TAAS.bindClickEvents();
@@ -52,8 +71,7 @@ window.TAAS = new Core();
 
     TAAS.registerGlobal('bindClickEvents', function () {
         $(document).on("click", function () {
-            var clickedPath = $(this).getPath();
-            var clickedBtnID = $(this).attr('id'); // or var clickedBtnID = this.id
+            var clickedPath = fullPath($(this));
             alert('you clicked on button ' + clickedPath);
         });
     });
