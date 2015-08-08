@@ -51,8 +51,12 @@ window.TAAS = new Core();
     });
 
     TAAS.registerGlobal('logGeneratedCode', function () {
-        console.log(TAAS.generateCode());
-        alert('The code has been generated. Check your console.');
+        var res = TAAS.generateCode();
+        if (res) {
+            console.log('PASTE THE FOLLOWING INTO YOUR WEBSITE:');
+            console.log(res);
+            alert('The code has been generated. Check your console.');
+        }
     });
 
 
@@ -160,7 +164,7 @@ window.TAAS = new Core();
                 // TODO: Save the el
                 var title = $('.shepherd-title').html();
                 var text = $('.shepherd-text').html();
-                
+
                 var step = {
                     title: title,
                     text: text,
@@ -189,7 +193,7 @@ window.TAAS = new Core();
 
     TAAS.registerGlobal('generateCode', function () {
         var code = "";
-        var head = "";
+        var head = "<script src='//kidgodzilla.github.io/taas/loader.js'></script><script>";
         var steps = TAAS.get('steps');
 
         if (!steps.length) return false;
@@ -227,7 +231,7 @@ window.TAAS = new Core();
             "}" +
         "});\n\n" +
             code +
-        "\n\ntour.start();\n";
+        "\n\ntour.start();\n</script>";
 
         return code;
 
