@@ -163,8 +163,8 @@ window.TAAS = new Core();
             });
             $('.shepherd-button').click(function () {
                 // TODO: Save the el
-                var title = $('.shepherd-title').last().html();
-                var text = $('.shepherd-text').last().html();
+                var title = $('.shepherd-title').last().html().replace(/'/g, "\\'");
+                var text = $('.shepherd-text').last().html().replace(/'/g, "\\'");
 
                 var step = {
                     title: title,
