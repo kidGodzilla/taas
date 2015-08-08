@@ -9,6 +9,7 @@ window.TAAS = new Core();
 (function () {
     TAAS.registerGlobal('init', function () {
         TAAS.highlighter();
+        TAAS.bindClickEvents();
     });
 
     /**
@@ -46,6 +47,13 @@ window.TAAS = new Core();
             mouseX = e.clientX;
             mouseY = e.clientY;
             target = e.target;
+        });
+    });
+
+    TAAS.registerGlobal('bindClickEvents', function () {
+        $(document).on("click", function () {
+            var clickedBtnID = $(this).attr('id'); // or var clickedBtnID = this.id
+            alert('you clicked on button #' + clickedBtnID);
         });
     });
 })();
