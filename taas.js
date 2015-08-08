@@ -71,7 +71,7 @@ window.TAAS = new Core();
 
     TAAS.registerGlobal('bindClickEvents', function () {
         $('*').on("click", function () {
-            var clickedPath = fullPath($(this));
+            var clickedPath = $(this).getPath();
             console.log('you clicked on button ' + clickedPath);
         });
     });
