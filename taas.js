@@ -51,7 +51,7 @@ window.TAAS = new Core();
     });
 
     TAAS.registerGlobal('logGeneratedCode', function () {
-        console.log(generateCode());
+        console.log(TAAS.generateCode());
         alert('The code has been generated. Check your console.');
     });
 
