@@ -95,7 +95,7 @@ window.TAAS = new Core();
         var debounce;
 
 
-        $('*').not('.generator').on("click", function (event) {
+        $('*:not(.generator)').on("click", function (event) {
             event.stopPropagation();
             event.preventDefault();
 
