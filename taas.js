@@ -32,7 +32,18 @@ window.TAAS = new Core();
             TAAS.highlighter();
             TAAS.bindClickEvents();
             TAAS.set('steps', []);
+            TAAS.appendUI();
         });
+    });
+
+
+    TAAS.registerGlobal('appendUI', function () {
+        $('body').append("<button class='btn btn-primary' style='position:fixed;bottom:32px;right:32px;z-index:99999999999999999;' onclick='TAAS.logGeneratedCode()'></button>");
+    });
+
+    TAAS.registerGlobal('logGeneratedCode', function () {
+        console.log(generateCode());
+        alert('The code has been generated. Check your console.');
     });
 
 
