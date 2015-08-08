@@ -40,7 +40,7 @@ window.TAAS = new Core();
 
 
     TAAS.registerGlobal('appendUI', function () {
-        $('body').append("<button class='generator btn btn-primary' style='position:fixed;bottom:32px;right:32px;z-index:99999999999999999;' onclick='TAAS.logGeneratedCode()'>Generate Code</button>");
+        $('body').append("<button class='generator unshepable btn btn-primary' style='position:fixed;bottom:32px;right:32px;z-index:99999999999999999;' onclick='TAAS.logGeneratedCode()'>Generate Code</button>");
 
         $('.generator').click(function () {
             TAAS.set('debouncing', 1);
@@ -52,6 +52,7 @@ window.TAAS = new Core();
         vex.dialog.alert({
             message: 'You are about to create a new tour for this page. To get started, click an element on your page.'
         });
+        $('.vex *').addClass('unshepable');
 
     });
 
@@ -111,7 +112,7 @@ window.TAAS = new Core();
         var debounce;
 
 
-        $('*:not(.generator)').on("click", function (event) {
+        $('*:not(.unshepable)').on("click", function (event) {
             event.stopPropagation();
             event.preventDefault();
 
