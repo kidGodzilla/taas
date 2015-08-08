@@ -162,8 +162,8 @@ window.TAAS = new Core();
             });
             $('.shepherd-button').click(function () {
                 // TODO: Save the el
-                var title = $('.shepherd-title').html();
-                var text = $('.shepherd-text').html();
+                var title = $('.shepherd-title').last().html();
+                var text = $('.shepherd-text').last().html();
 
                 var step = {
                     title: title,
@@ -172,6 +172,8 @@ window.TAAS = new Core();
                     sel: sel
                 };
                 TAAS.appendStep(step);
+
+                $('.shepherd-element').remove();
 
 
                TAAS.set('debouncing', 1);
@@ -240,15 +242,6 @@ window.TAAS = new Core();
 
 
 })();
-
-
-$(document).delegate('.shepherd-button', 'click', function () {
-    setTimeout(function () {
-        var ts = tour.getCurrentStep().id;
-        var $el = $('.'+ts);
-        $('#shepherd-overlay').css('left', $el.offset().left).css('top', $el.offset().top).css('width', $el.width()).css('height', $el.height())
-    }, 10);
-});
 
 
 TAAS.init();
