@@ -70,9 +70,9 @@ window.TAAS = new Core();
     });
 
     TAAS.registerGlobal('bindClickEvents', function () {
-        $(document).on("click", function () {
+        $('*').on("click", function () {
             var clickedPath = fullPath($(this));
-            alert('you clicked on button ' + clickedPath);
+            console.log('you clicked on button ' + clickedPath);
         });
     });
 })();
