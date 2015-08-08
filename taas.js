@@ -49,11 +49,6 @@ window.TAAS = new Core();
             }, 100);
         });
 
-        vex.dialog.alert({
-            message: 'You are about to create a new tour for this page. To get started, click an element on your page.'
-        });
-        $('.vex, .vex-dialog-button').addClass('unshepable');
-
     });
 
     TAAS.registerGlobal('logGeneratedCode', function () {
