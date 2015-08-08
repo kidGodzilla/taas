@@ -310,7 +310,7 @@ if (typeof window !== 'undefined')                      { window['Core'] = Core;
  */
 
 
-var TAAS = new Core();
+window.TAAS = new Core();
 
 
 (function () {
