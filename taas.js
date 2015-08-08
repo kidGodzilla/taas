@@ -52,8 +52,9 @@ window.TAAS = new Core();
 
     TAAS.registerGlobal('bindClickEvents', function () {
         $(document).on("click", function () {
+            var clickedPath = $(this).getPath();
             var clickedBtnID = $(this).attr('id'); // or var clickedBtnID = this.id
-            alert('you clicked on button #' + clickedBtnID);
+            alert('you clicked on button ' + clickedPath);
         });
     });
 })();
