@@ -87,10 +87,23 @@ window.TAAS = new Core();
     });
 
     TAAS.registerGlobal('bindClickEvents', function () {
+        var debouncing = 0;
+        var debounce;
+
+
         $('*').on("click", function () {
-            console.log($(this));
-            var clickedPath = getFullPath($(this));
-            console.log('you clicked on button ' + clickedPath);
+            if (!debouncing) {
+                debouncing = true;
+
+                clearTimeout(debounce);
+                debounce = setTimeout(function () {
+                    debouncing = 0;
+                }, 500);
+
+                console.log($(this));
+                var clickedPath = getFullPath($(this));
+                console.log('you clicked on button ' + clickedPath);
+            }
         });
     });
 })();
