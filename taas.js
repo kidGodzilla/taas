@@ -26,6 +26,23 @@ window.TAAS = new Core();
         return names.join(" > ");
     }
 
+    function getFullPath (el) {
+        var current = el;
+        var path = new Array();
+        var realpath = "BODY";
+        while ($(current).prop("tagName") != "BODY") {
+            var index = $(current).parent().find($(current).prop("tagName")).index($(current));
+            var name = $(current).prop("tagName");
+            var selector = " " + name + ":eq(" + index + ") ";
+            path.push(selector);
+            current = $(current).parent();
+        }
+        while (path.length != 0) {
+            realpath += path.pop();
+        }
+        return realpath;
+    }
+
     TAAS.registerGlobal('init', function () {
         TAAS.highlighter();
         TAAS.bindClickEvents();
@@ -71,7 +88,8 @@ window.TAAS = new Core();
 
     TAAS.registerGlobal('bindClickEvents', function () {
         $('*').on("click", function () {
-            var clickedPath = $(this).getPath();
+            console.log($(this));
+            var clickedPath = getFullPath($(this));
             console.log('you clicked on button ' + clickedPath);
         });
     });
