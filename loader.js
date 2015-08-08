@@ -133,7 +133,7 @@
          */
         loadScript('http://kidgodzilla.github.io/taas/jquery.getpath.js');
         loadScript('http://kidgodzilla.github.io/taas/core.js');
-        loadScript('http://kidgodzilla.github.io/taas/taas.js');
+        // loadScript('http://kidgodzilla.github.io/taas/taas.js');
 
         // Once completed, set an identifier to true to avoid running the script loader twice
         window[loaderName] = true;

@@ -9,21 +9,28 @@ window.TAAS = new Core();
 (function () {
 
     function fullPath (el) {
-        var names = [];
-        while (el.parentNode){
-            if (el.id){
-                names.unshift('#'+el.id);
-                break;
-            } else {
-                if (el==el.ownerDocument.documentElement) names.unshift(el.tagName);
-                else {
-                    for (var c=1,e=el;e.previousElementSibling;e=e.previousElementSibling,c++);
-                    names.unshift(el.tagName+":nth-child("+c+")");
+        var path, node = this;
+        while (node.length) {
+            var realNode = node[0], name = realNode.localName;
+            if (!name) break;
+            name = name.toLowerCase();
+
+            var parent = node.parent();
+
+            var sameTagSiblings = parent.children(name);
+            if (sameTagSiblings.length > 1) {
+                allSiblings = parent.children();
+                var index = allSiblings.index(realNode) + 1;
+                if (index > 1) {
+                    name += ':nth-child(' + index + ')';
                 }
-                el = el.parentNode;
             }
+
+            path = name + (path ? '>' + path : '');
+            node = parent;
         }
-        return names.join(" > ");
+
+        return path;
     }
 
 
