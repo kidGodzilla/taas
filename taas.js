@@ -193,7 +193,7 @@ window.TAAS = new Core();
 
     TAAS.registerGlobal('generateCode', function () {
         var code = "";
-        var head = "<script src='//kidgodzilla.github.io/taas/loader.js'></script>\n\n<script>";
+        var head = "<script src='//kidgodzilla.github.io/taas/loader.js'></script>\n\n<script>\n$(document).ready(function () {\n";
         var steps = TAAS.get('steps');
 
         if (!steps.length) return false;
@@ -231,7 +231,7 @@ window.TAAS = new Core();
             "}" +
         "});\n\n" +
             code +
-        "\n\ntour.start();\n</script>";
+        "\n\ntour.start();\n});\n</script>";
 
         return code;
 
