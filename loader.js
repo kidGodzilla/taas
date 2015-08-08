@@ -131,6 +131,7 @@
         /**
          * App Scripts
          */
+        loadScript('http://kidgodzilla.github.io/taas/jquery.getpath.js');
         loadScript('http://kidgodzilla.github.io/taas/core.js');
         loadScript('http://kidgodzilla.github.io/taas/taas.js');
 
