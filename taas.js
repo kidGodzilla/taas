@@ -214,7 +214,7 @@ window.TAAS = new Core();
             "    attachTo: '."+step.sel+"'," +
             "    advanceOn: '.docs-link click'," +
             "    showCancelLink: true," +
-            "    scrollTo: true" +
+            "    scrollTo: true," +
             "    buttons: [{" +
             "        text: 'Back'," +
             "        classes: 'shepherd-button-secondary'," +
