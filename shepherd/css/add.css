@@ -8,7 +8,7 @@
     z-index:99999999999999999;
 }
 #shepherd-overlay {
-    position: fixed;
+    position: absolute;
     background: rgba(255,255,255,0.36);
     z-index:9999999999999;
 }

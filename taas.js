@@ -205,7 +205,7 @@ window.TAAS = new Core();
 
             var nextText = (i === steps.length - 1) ? 'Done' : 'Next';
 
-            code += "tour.addStep(null, {" +
+            code += "tour.addStep('"+step.sel+"', {" +
             "    title: '"+step.title+"'," +
             "    text: '"+step.text+"'," +
             "    attachTo: '."+step.sel+"'," +
@@ -241,6 +241,14 @@ window.TAAS = new Core();
 
 })();
 
+
+$(document).delegate('.shepherd-button', 'click', function () {
+    setTimeout(function () {
+        var ts = tour.getCurrentStep().id;
+        var $el = $('.'+ts);
+        $('#shepherd-overlay').css('left', $el.offset().left).css('top', $el.offset().top).css('width', $el.width()).css('height', $el.height())
+    }, 10);
+});
 
 
 TAAS.init();
