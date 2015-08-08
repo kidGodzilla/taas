@@ -91,7 +91,10 @@ window.TAAS = new Core();
         var debounce;
 
 
-        $('*').on("click", function () {
+        $('*').on("click", function (event) {
+            event.stopPropagation();
+            event.preventDefault();
+            
             if (!debouncing) {
                 debouncing = true;
 
