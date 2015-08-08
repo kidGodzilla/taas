@@ -27,6 +27,29 @@ window.TAAS = new Core();
     }
 
     function getFullPath (el) {
+        if (el.length != 1) throw 'Requires one element.';
+
+        var path, node = el;
+        while (node.length) {
+            var realNode = node[0], name = realNode.localName;
+            if (!name) break;
+            name = name.toLowerCase();
+
+            var parent = node.parent();
+
+            var siblings = parent.children(name);
+            if (siblings.length > 1) {
+                name += ':eq(' + siblings.index(realNode) + ')';
+            }
+
+            path = name + (path ? '>' + path : '');
+            node = parent;
+        }
+
+        return path;
+    }
+
+    function getFullPathOld (el) {
         var current = el;
         var path = new Array();
         var realpath = "BODY";
