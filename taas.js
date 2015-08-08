@@ -26,45 +26,6 @@ window.TAAS = new Core();
         return names.join(" > ");
     }
 
-    function getFullPath (el) {
-        if (el.length != 1) throw 'Requires one element.';
-
-        var path, node = el;
-        while (node.length) {
-            var realNode = node[0], name = realNode.localName;
-            if (!name) break;
-            name = name.toLowerCase();
-
-            var parent = node.parent();
-
-            var siblings = parent.children(name);
-            if (siblings.length > 1) {
-                name += ':eq(' + siblings.index(realNode) + ')';
-            }
-
-            path = name + (path ? '>' + path : '');
-            node = parent;
-        }
-
-        return path;
-    }
-
-    function getFullPathOld (el) {
-        var current = el;
-        var path = new Array();
-        var realpath = "BODY";
-        while ($(current).prop("tagName") != "BODY") {
-            var index = $(current).parent().find($(current).prop("tagName")).index($(current));
-            var name = $(current).prop("tagName");
-            var selector = " " + name + ":eq(" + index + ") ";
-            path.push(selector);
-            current = $(current).parent();
-        }
-        while (path.length != 0) {
-            realpath += path.pop();
-        }
-        return realpath;
-    }
 
     TAAS.registerGlobal('init', function () {
         TAAS.highlighter();
@@ -131,7 +92,7 @@ window.TAAS = new Core();
                 target = TAAS.get('target');
 
                 console.log(target);
-                var clickedPath = getFullPath(target);
+                var clickedPath = fullPath(target);
                 console.log('you clicked on button ' + clickedPath);
             }
         });
