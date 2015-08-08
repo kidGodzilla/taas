@@ -41,6 +41,13 @@ window.TAAS = new Core();
 
     TAAS.registerGlobal('appendUI', function () {
         $('body').append("<button class='generator btn btn-primary' style='position:fixed;bottom:32px;right:32px;z-index:99999999999999999;' onclick='TAAS.logGeneratedCode()'>Generate Code</button>");
+
+        $('.generator').click(function () {
+            TAAS.set('debouncing', 1);
+            setTimeout(function () {
+                TAAS.set('debouncing', 0);
+            }, 100);
+        });
     });
 
     TAAS.registerGlobal('logGeneratedCode', function () {
