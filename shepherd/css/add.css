@@ -9,7 +9,7 @@
 }
 #shepherd-overlay {
     position: absolute;
-    background: rgba(255,255,255,0.36);
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.4) 0%,rgba(255,255,255,0) 100%);
     z-index:9999999999999;
 }
 .shepherd-element {
