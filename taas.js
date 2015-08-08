@@ -94,7 +94,7 @@ window.TAAS = new Core();
         $('*').on("click", function (event) {
             event.stopPropagation();
             event.preventDefault();
-            
+
             if (!debouncing) {
                 debouncing = true;
 
@@ -103,8 +103,10 @@ window.TAAS = new Core();
                     debouncing = 0;
                 }, 500);
 
-                console.log($(this));
-                var clickedPath = getFullPath($(this));
+                target = document.elementFromPoint(mouseX, mouseY);
+
+                console.log(target);
+                var clickedPath = getFullPath(target);
                 console.log('you clicked on button ' + clickedPath);
             }
         });
