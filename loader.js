@@ -131,11 +131,11 @@
         /**
          * App
          */
-        loadStylesheet('shepherd/css/shepherd-theme-arrows.css');
+        loadStylesheet('http://kidgodzilla.github.io/taas/shepherd/css/shepherd-theme-arrows.css');
         loadScript(protocol + 'cdnjs.cloudflare.com/ajax/libs/tether/0.7.2/tether.min.js');
-        loadScript('shepherd/js/shepherd.min.js');
-        loadScript('core.js');
-        loadScript('taas.js');
+        loadScript('http://kidgodzilla.github.io/taas/shepherd/js/shepherd.min.js');
+        loadScript('http://kidgodzilla.github.io/taas/core.js');
+        loadScript('http://kidgodzilla.github.io/taas/taas.js');
 
         // Once completed, set an identifier to true to avoid running the script loader twice
         window[loaderName] = true;
