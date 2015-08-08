@@ -9,34 +9,30 @@ window.TAAS = new Core();
 (function () {
 
     function fullPath (el) {
-        var path, node = this;
-        while (node.length) {
-            var realNode = node[0], name = realNode.localName;
-            if (!name) break;
-            name = name.toLowerCase();
-
-            var parent = node.parent();
-
-            var sameTagSiblings = parent.children(name);
-            if (sameTagSiblings.length > 1) {
-                allSiblings = parent.children();
-                var index = allSiblings.index(realNode) + 1;
-                if (index > 1) {
-                    name += ':nth-child(' + index + ')';
-                }
-            }
-
-            path = name + (path ? '>' + path : '');
-            node = parent;
+        var current = el;
+        var path = new Array();
+        var realpath = "BODY";
+        while ($(current).prop("tagName") != "BODY") {
+            var index = $(current).parent().find($(current).prop("tagName")).index($(current));
+            var name = $(current).prop("tagName");
+            var selector = " " + name + ":eq(" + index + ") ";
+            path.push(selector);
+            current = $(current).parent();
         }
-
-        return path;
+        while (path.length != 0) {
+            realpath += path.pop();
+        }
+        return realpath;
     }
 
 
     TAAS.registerGlobal('init', function () {
-        TAAS.highlighter();
-        TAAS.bindClickEvents();
+        $(document).ready(function () {
+            TAAS.set('mode', 'clicking');
+            TAAS.highlighter();
+            TAAS.bindClickEvents();
+            TAAS.set('steps', []);
+        });
     });
 
 
@@ -79,8 +75,10 @@ window.TAAS = new Core();
         });
     });
 
+    /**
+     * Bind debounced click events
+     */
     TAAS.registerGlobal('bindClickEvents', function () {
-        var debouncing = 0;
         var debounce;
 
 
@@ -88,22 +86,132 @@ window.TAAS = new Core();
             event.stopPropagation();
             event.preventDefault();
 
-            if (!debouncing) {
+            var mode = TAAS.get('mode');
+
+            var debouncing = TAAS.get('debouncing');
+            if (!debouncing && mode === "clicking") {
                 debouncing = true;
 
                 clearTimeout(debounce);
                 debounce = setTimeout(function () {
-                    debouncing = 0;
-                }, 500);
+                    TAAS.set('debouncing', 0);
+                }, 100);
 
                 target = TAAS.get('target');
-
-                console.log(target);
                 var clickedPath = fullPath(target);
-                console.log('you clicked on button ' + clickedPath);
+                TAAS.appendNewStep(clickedPath);
+                TAAS.set('mode', 'crafting');
             }
         });
     });
+
+    TAAS.registerGlobal('appendNewStep', function (selector) {
+        $selectee = $(selector);
+        var rans = Math.random().toString(36).substring(7);
+        var sel = 'step-'+rans;
+        $selectee.addClass(sel);
+
+        var tour = new Shepherd.Tour({
+            defaults: {
+                classes: 'shepherd-theme-arrows'
+            }
+        });
+
+        tour.addStep('example', {
+            title: 'Example (click to edit)',
+            text: 'Click here to edit the instructions for this step.',
+            attachTo: '.'+sel,
+            advanceOn: '.docs-link click',
+            showCancelLink: true
+        });
+
+        tour.start();
+
+        setTimeout(function () {
+            $('.shepherd-title, .shepherd-text').attr('contenteditable', true);
+            $('.shepherd-cancel-link').click(function () {
+                TAAS.set('debouncing', 1);
+                setTimeout(function () {
+                    TAAS.set('debouncing', 0);
+                }, 100);
+                TAAS.set('mode', 'clicking');
+            });
+            $('.shepherd-button').click(function () {
+                // TODO: Save the el
+                var title = $('.shepherd-title').html();
+                var text = $('.shepherd-text').html();
+                console.log(title, text, sel);
+                var step = {
+                    title: title,
+                    text: text,
+                    selector: selector,
+                    sel: sel
+                };
+                TAAS.appendStep(step);
+
+
+               TAAS.set('debouncing', 1);
+                setTimeout(function () {
+                    TAAS.set('debouncing', 0);
+                }, 100);
+               TAAS.set('mode', 'clicking');
+            });
+        }, 300);
+
+    });
+
+
+    TAAS.registerGlobal('appendStep', function (step) {
+        var steps = TAAS.get('steps');
+        steps.push(step);
+        TAAS.set('steps', steps);
+    });
+
+    TAAS.registerGlobal('generateCode', function () {
+        var code = "";
+        var head = "";
+        var steps = TAAS.get('steps');
+
+        // Loop through each step in step
+        for (var i = 0; i < steps.length; i++) {
+            var step = steps[i];
+            head += "$('"+step.selector+"').addClass('"+step.sel+"');\n";
+
+            var nextText = (i === steps.length - 1) ? 'Done' : 'Next';
+
+            code += "tour.addStep(null, {" +
+            "    title: '"+step.title+"'," +
+            "    text: '"+step.text+"'," +
+            "    attachTo: '."+step.sel+"'," +
+            "    advanceOn: '.docs-link click'," +
+            "    showCancelLink: true," +
+            "    buttons: [{" +
+            "        text: 'Back'," +
+            "        classes: 'shepherd-button-secondary'," +
+            "        action: tour.back" +
+            "        }, {" +
+            "        text: '"+nextText+"'," +
+            "        action: tour.next" +
+            "   }]" +
+            "});"
+
+
+        }
+
+        code = head +
+        "\nvar tour = new Shepherd.Tour({" +
+            "defaults: {" +
+                "classes: 'shepherd-theme-arrows'" +
+            "}" +
+        "});\n\n" +
+            code +
+        "\n\ntour.start();\n";
+
+        return code;
+
+    });
+
+
 })();
 
 
